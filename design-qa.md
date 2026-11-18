@@ -1,50 +1,31 @@
-# Design QA
+﻿# Vue 3 portal design QA
 
-final result: passed
+Final result: passed
 
-## Visual target and evidence
+## Scope and evidence
 
-- Source: `C:/Users/LENOVO/AppData/Local/Temp/codex-clipboard-3b4d8523-4efc-43bb-92da-ce0e7f7a2896.png` (1419 × 992).
-- Color override: `C:/Users/LENOVO/AppData/Local/Temp/codex-clipboard-edf4d80e-e78d-46f3-8702-fbfdbe251365.png`; sampled RGB 20,73,148, CSS #144994.
-- Implementation: `.qa/desktop-filled.png`, `.qa/mobile-success.png`, `.qa/desktop-confirm.png`, `.qa/desktop-success.png`.
-- Combined full-view comparison: `.qa/comparison-final.png`. Focused form comparison: `.qa/comparison-detail.png`. Both were opened and visually inspected together with the source.
-- Desktop CSS viewport 1419 × 992, deviceScaleFactor 1. Full-page screenshot 1404 × 1036; 15px reserved for desktop scrollbar. Full page grows with real form controls; screenshots are compared at native density without stretching. Mobile viewport 390 × 844, density 1, full-page capture.
-- Final full-page pixels: source 1419 × 992; implementation 1404 × 1036 (15px desktop scrollbar excluded by browser capture, longer content from real controls); CSS viewport 1419 × 992, deviceScaleFactor 1. Evidence: `.qa/comparison-final.png` and `.qa/comparison-detail.png`; screenshots `.qa/desktop-filled.png`, `.qa/mobile-success.png`, `.qa/desktop-confirm.png`, `.qa/desktop-success.png`.
-- State: file selected, both hashes ready, registration filled, second step active. Reference has three inline names; test fixture has two editable names and real reorder controls. Fixture contains the three-byte file abc rather than the reference's 18.4MB document; size and hashes therefore intentionally differ.
+The selected service-home and application-dashboard references were compared beside the implementation in `.qa/vue-home-comparison.png` and `.qa/vue-certificates-comparison.png`. Desktop captures, narrow-screen captures and the four-step registration workflow were inspected. The reference images measure 1444 × 879 and 845 × 466; implementation captures measure 1429 × 1014 and 1404 × 1007. Comparison uses complete screenshots without stretching either source.
 
-## Findings and iteration history
+## Visual result
 
-1. First pass: desktop content was too tall and page gutter was missing; researcher controls added excessive vertical density. Reduced upload/submission padding, restored outer gutter, and placed short personnel controls inline on desktop.
-2. Second pass: the general input width rule overrode personnel input width, causing overlapping controls. Corrected selector specificity and recaptured both viewports.
-3. Final combined inspection: researcher inputs and controls no longer overlap, panels align, required input labels remain legible, and desktop/mobile contain no horizontal overflow. No remaining actionable P0/P1/P2 issues.
+The home retains the reference hierarchy: introductory hero, guide action, four process cards, six achievement categories, online-registration card and service notices. The current brand color #144994 replaces the reference navy and gold as requested. Shared navigation connects the home, existing registration workflow and personal certificates. The dashboard retains five status summaries, filters, records and pagination in the same blue, white and pale-blue style as registration.
 
-## Required fidelity surfaces
+Intentional adaptations: the new navigation adds vertical height; reference demo identity and record counts are omitted; unavailable verification and authentication claims are omitted; certificate details open in a shared accessible dialog rather than a permanently visible side panel. This follows the user's request to use the second image as a loose reference while retaining the current style. The pending-integration screen is the real default; populated screenshots use intercepted test responses only.
 
-- Typography: Chinese system sans-serif stack, 17px header, 16px section titles, 11–13px dense form/supporting text, matching the reference's compact administrative form hierarchy. Native select/date controls are retained for usability.
-- Layout: four equal-width steps; desktop left form and right 349px summary column; pale bordered white panels, 12px radii, 16–24px section gaps. Small height differences accommodate real editable fields and consent checkbox. Mobile stacks panels and keeps controls accessible.
-- Colors: primary #144994 follows the user's explicit color override, with pale blue-gray fields, white panels, green local-privacy note, cream certificate panel and yellow security heading.
-- Assets: the supplied screen has no photos, logos or illustrative assets to recreate; all content consists of native form/UI text and panels. No generated imagery or substitute artwork needed.
-- Copy: reference structure retained. User identity, automatic identity-provider defaults, logout and external verifier claims are omitted because the backend does not implement those features. The research-unit default is editable. File type/size, errors and status reflect actual application state.
+An oversized dashboard action found during the first pass was fixed by disabling flex growth. Final desktop and mobile captures show no unintended horizontal page overflow. Required-field feedback reserves its own row. Confirmation dialogs preserve the background position. No unresolved blocking visual defects remain.
 
 ## Functional verification
 
-`node scripts/browser-check.mjs` passed using an isolated Chrome headless profile because an in-app browser automation tool was unavailable. No Playwright CLI/MCP was used.
+- Format check passed for source, module docs, README, Vite configuration and HTML.
+- Six hashing and API unit checks passed.
+- Four static hosting and packaging checks passed.
+- Vite 8 production build passed.
+- Browser workflow check passed: file selection, both worker hashes, required fields, future-date rejection, read-only institute, personnel ordering, route-cached draft, confirmation, duplicate-submit prevention, SN copy and binary download.
+- Browser failure scenarios passed: uncertain submission remains locked; issued certificate remains downloadable after database update failure.
+- Isolated certificate-module check passed: status and keyword filters, reset, pagination, details, download, expired-login response, retry and mobile overflow. No real signing request was sent.
 
-- Worker computes both known abc digests; unit tests additionally cover empty and cross-chunk files.
-- Add/reorder personnel and numeric confidentiality preserve JSON shape.
-- Confirmation dialog, both algorithm routes, and duplicate-click prevention work.
-- Returned Base64 AQID downloads as binary bytes 01 02 03 with .tsr extension.
-- Ambiguous signing failure locks repeat submission; code 3002 preserves issued credential download.
-- No browser runtime/console errors recorded; mobile horizontal overflow check passed.
-- Browser signing requests were intercepted with test responses; no paid/real upstream issuance or database writes were performed by these tests.
-- Unit tests, production build and starter static-host packaging tests passed.
-- Live backend connectivity verified through the frontend proxy: an intentionally invalid digest returned HTTP 400 / code 1003 from the existing backend at 192.168.188.32:3010; validation occurs before database creation/signing, so this probe did not issue a timestamp.
+Evidence logs: `.qa/vue-browser-final.log`, `.qa/vue-records-final.log`. Browser assertions are maintained in `scripts/browser-check.mjs`.
 
-## Follow-up polish / limits
+## Integration limit
 
-- No login/history functionality because those APIs are not available.
-- Real production signing still depends on running backend and valid upstream configuration.
-- 2GB maximum is enforced; the largest automated input tested is just over 5MB, not a full 2GB browser stress test.
-- Save credentials before refreshing; sensitive form/file information is not persisted in browser storage.
-
-final result: passed
+Authentication and personal-application endpoints have not been supplied. The production default makes no personal-list request and displays a pending-integration empty state. `src/api/certificates.js` and `docs/modules.md` document the proposed authenticated adapter contract; it remains disabled until a real backend is available. This is not an end-to-end verification against a live identity service.

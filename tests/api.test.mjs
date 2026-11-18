@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { applyTimestamp } from '../src/api.js';
+import { applyTimestamp } from '../src/api/timestamp.js';
 
 test('两种算法按 JSON 协议提交，成果密级保持数字', async t => {
-  const body = { rid: 'a'.repeat(64), cert_req: false, achievement: { confidentiality: 2, researchers: ['张某', '李某'] } };
+  const body = { rid: 'a'.repeat(64), achievement: { confidentiality: 2, researchers: ['张某', '李某'] } };
   for (const [algorithm, route] of [['SM3', 'sm'], ['SHA256', 'rsa']]) {
     t.mock.method(globalThis, 'fetch', async (url, options) => {
       assert.equal(url, `/api/timestamp/${route}`);

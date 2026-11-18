@@ -1,0 +1,109 @@
+.message-host {
+  position: fixed;
+  z-index: 100;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+.app-message {
+  --message-color: #bd5563;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: min(600px, 100%);
+  min-height: 56px;
+  padding: 14px 18px;
+  border-left: 3px solid var(--message-color);
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 6px 26px #243f661c;
+  pointer-events: auto;
+  animation: message-enter 0.18s ease-out;
+}
+.app-message--warning {
+  --message-color: #b58325;
+}
+.app-message--success {
+  --message-color: #34906c;
+}
+.app-message--info {
+  --message-color: #447bb7;
+}
+.app-message-icon {
+  flex-shrink: 0;
+  color: var(--message-color);
+}
+.app-message--error .app-message-icon,
+.app-message--warning .app-message-icon {
+  fill: var(--message-color);
+  stroke: white;
+}
+.app-message-content {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #4c536b;
+  overflow-wrap: anywhere;
+}
+.app-message-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  padding: 3px;
+  margin-left: 4px;
+  color: #94a0af;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+}
+.app-message-close:hover {
+  color: #52647b;
+  background: #f1f4f8;
+}
+.app-message-close:focus-visible {
+  outline: 1px solid #527bb1;
+  outline-offset: 2px;
+}
+.app-message-close svg {
+  display: block;
+}
+@keyframes message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 540px) {
+  .message-host {
+    top: 16px;
+    max-width: calc(100vw - 24px);
+  }
+  .app-message {
+    padding: 12px;
+    gap: 10px;
+  }
+  .app-message-content {
+    font-size: 13px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-message {
+    animation: none;
+  }
+}
